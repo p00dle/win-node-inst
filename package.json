@@ -1,0 +1,14 @@
+{
+  "name": "win-node-inst",
+  "version": "0.1.0",
+  "description": "Make a PowerShell installer to deploy a Node.JS app",
+  "main": "make-ps-installer.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Krzysztof Siuda",
+  "license": "MIT",
+  "bin": {
+    "make-win-node-inst": "./make-ps-installer.js"
+  }
+}
