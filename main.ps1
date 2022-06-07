@@ -1,6 +1,7 @@
 . .\lib\utils.ps1
 . .\lib\node.ps1
 . .\lib\git.ps1
+. .\lib\app-ver.ps1
 
 $ProgressPreference = "SilentlyContinue"
 $global:ProgressPreference = "SilentlyContinue"
@@ -28,7 +29,7 @@ else {
   $nodeVersion = getNodeLtsVersion
   log "Current Node.JS LTS version $($nodeVersion)"
   log "Downloading Node.JS installer..."
-  $nodeInstallerPath = downloadNode $nodeVersion $standalone $is64
+  $nodeInstallerPath = downloadNode $nodeVersion $standalone
   log $nodeInstallerPath
   log "$($env:APPDATA)\win-node-inst\node"
   log "Node.JS installer downloaded"
@@ -65,7 +66,7 @@ if ($null -ne $gitPath) {
 else {
   log "Git not installed"
   log "Getting Git current version download URL..."
-  $gitDownloadUrl = getGitDownloadUrl $standalone $is64
+  $gitDownloadUrl = getGitDownloadUrl $standalone
   log "Downloading Git installer..."
   $gitInstallerPath = downloadGit $gitDownloadUrl
   log "Git installer downloaded"
@@ -92,7 +93,10 @@ else {
 log ""
 
 log "Check if $($appName) is already installed"
-if (-Not (Test-Path "./app/.git")) {
+
+$appOldVersion = getAppVersion
+
+if ($null -eq $appOldVersion) {
   log "App not installed. installing now"
   & mkdir ./app | Out-Null
   Set-Location './app' | Out-Null
@@ -104,7 +108,8 @@ if (-Not (Test-Path "./app/.git")) {
   & $gitPath remote add origin $mainGitRepository | Out-Null
 }
 else {
-  log "App installed. Checking for updates..."
+  log "App version v$($appOldVersion) installed"
+  log "Checking for updates..."
   log "[GIT LOGS START]"
   Set-Location './app'
 } 
@@ -115,16 +120,27 @@ log "App is up to date"
 
 log ""
 
-log "Updating dependencies... (This may take a while)"
-$npmPath = getNpmPath
-log "[NPM LOGS START]"
-& $npmPath install --production | Out-Null
-log "[NPM LOGS END]"
-log "Dependencies up to date"
+$appNewVersion = getAppVersion
+if ($appOldVersion -ne $appNewVersion) {
+  log "Updating dependencies... (This may take a while)"
+  $npmPath = getNpmPath
+  log "[NPM LOGS START]"
+  & $npmPath install --production | Out-Null
+  log "[NPM LOGS END]"
+  log "Dependencies up to date"
+  if ($useTsc) {
+    log "Building from source..."
+    $npxPath = getNpxPath
+    & $npxPath -- yes tsc
+    log "Build complete"
+  }
+  log "App fully updated to v$($appNewVersion)"
+}
+
 
 Set-Location '..'
 
-$startFileContent = "@`"$($nodePath)`" `"./app/$($appEntryPoint)`"`n@pause`n"
+$startFileContent = "@echo $($appName) v$($appNewVersion)`n@`"$($nodePath)`" `"./app/$($appEntryPoint)`"`n@pause`n"
 
 if (-Not (Test-Path "./start.bat") ) {
   log "Creating start.bat file"

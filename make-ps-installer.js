@@ -20,7 +20,7 @@ $appEntryPoint = "${params.entry}"
 $gitAccessToken = ${params.token ? `"${params.token}"` : '$null'}
 $standalone = ${params.standalone ? '$true' : '$false'}
 $mainGitRepository = "${params.repo}"
-$is64 = ${params.is64 ? '$true' : '$false'}
+$useTsc = ${params.tsc ? '$true' : '$false'}
 `;
 const installerName = `${params.name}-installer.ps1`;
 writeFile(path.join(path.dirname(packageJsonPath), installerName), installerParams + bundlePs(path.join(__dirname, 'main.ps1')));

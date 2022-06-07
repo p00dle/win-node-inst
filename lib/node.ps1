@@ -6,19 +6,8 @@ function getNodeLtsVersion() {
   $ltsObject = $json | Where-Object { $_.lts }
   return $ltsObject[0].version
 }
-function downloadNode($version, $standalone, $is64) {
-  $arch = ""
-  if ($standalone) {
-    if ($is64) {
-      $arch = "x64"
-    }
-    else {
-      $arch = "x86"
-    }
-  }
-  else {
-    $arch = ("x86", "x64")[[Environment]::Is64BitOperatingSystem]
-  }
+function downloadNode($version, $standalone) {
+  $arch = ("x86", "x64")[[Environment]::Is64BitOperatingSystem]
   $nodeInstaller = ""
   if ($standalone) {
     $nodeInstaller = "node-$($version)-win-$($arch).zip"
@@ -66,6 +55,26 @@ function getNpmPath() {
     return $npmPath
   }
   $npmPath = "C:\Program Files (x86)\nodejs\npm.cmd"
+  if (Test-Path $npmPath) {
+    return $npmPath
+  }
+  return $null
+}
+
+function getNpxPath() {
+  $npmPath = where.exe "npm.cmd"
+  if ($null -ne $npmPath) {
+    return $npmPath
+  }
+  $npmPath = "$($env:APPDATA)\win-node-inst\node\node\npx.cmd"
+  if (Test-Path $npmPath) {
+    return $npmPath
+  }
+  $npmPath = "C:\Program Files\nodejs\npx.cmd"
+  if (Test-Path $npmPath) {
+    return $npmPath
+  }
+  $npmPath = "C:\Program Files (x86)\nodejs\npx.cmd"
   if (Test-Path $npmPath) {
     return $npmPath
   }
