@@ -30,13 +30,12 @@ else {
   log "Current Node.JS LTS version $($nodeVersion)"
   log "Downloading Node.JS installer..."
   $nodeInstallerPath = downloadNode $nodeVersion $standalone
-  log $nodeInstallerPath
-  log "$($env:APPDATA)\win-node-inst\node"
   log "Node.JS installer downloaded"
   if ($standalone) {
     log "Extracting Node.JS..."
     Expand-Archive -Path $nodeInstallerPath -DestinationPath "$($env:APPDATA)\win-node-inst\node" -Force 
     $extractDir = (Get-ChildItem "$($env:APPDATA)\win-node-inst\node")[0].FullName
+    Start-Sleep 5
     Rename-Item $extractDir "$($env:APPDATA)\win-node-inst\node\node" | Out-Null
     log "Node.JS extracted. Verifying installation"
   }
@@ -94,7 +93,7 @@ log ""
 
 log "Check if $($appName) is already installed"
 
-$appOldVersion = getAppVersion
+$appOldVersion = getAppVersion "./app/package.json"
 
 if ($null -eq $appOldVersion) {
   log "App not installed. installing now"
@@ -120,12 +119,13 @@ log "App is up to date"
 
 log ""
 
-$appNewVersion = getAppVersion
+$appNewVersion = getAppVersion "package.json"
+
 if ($appOldVersion -ne $appNewVersion) {
   log "Updating dependencies... (This may take a while)"
   $npmPath = getNpmPath
   log "[NPM LOGS START]"
-  & $npmPath install --production | Out-Null
+  & $npmPath install --only=production | Out-Null
   log "[NPM LOGS END]"
   log "Dependencies up to date"
   if ($useTsc) {
@@ -134,22 +134,12 @@ if ($appOldVersion -ne $appNewVersion) {
     & $npxPath -- yes tsc
     log "Build complete"
   }
+  $startFileContent = "@echo $($appName) v$($appNewVersion)`n@`"$($nodePath)`" `"./app/$($appEntryPoint)`"`n@pause`n"
+  Set-Location '..'
+  Out-File -FilePath "./start.bat" -InputObject $startFileContent -Encoding "ascii"
   log "App fully updated to v$($appNewVersion)"
 }
-
-
-Set-Location '..'
-
-$startFileContent = "@echo $($appName) v$($appNewVersion)`n@`"$($nodePath)`" `"./app/$($appEntryPoint)`"`n@pause`n"
-
-if (-Not (Test-Path "./start.bat") ) {
-  log "Creating start.bat file"
-}
-else {
-  log "Updating start.bat file"
-}
-
-Out-File -FilePath "./start.bat" -InputObject $startFileContent -Encoding "ascii"
+log "App fully updated to v$($appNewVersion)"
 
 log "Success"
 log "Run start.bat to start the app"

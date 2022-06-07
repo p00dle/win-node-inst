@@ -1,6 +1,4 @@
-$packageJsonPath = "./app/package.json"
-
-function getAppVersion() {
+function getAppVersion($packageJsonPath) {
   if (Test-Path $packageJsonPath) {
     $content = Get-Content $packageJsonPath
     $match = Select-String -InputObject $content -Pattern '"version": "(?<version>[^"]+)'
