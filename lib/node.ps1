@@ -80,3 +80,49 @@ function getNpxPath() {
   }
   return $null
 }
+
+function installNode($standalone) {
+  log "Node.JS not installed"
+  log "Getting Node.JS current LTS version"
+  $nodeVersion = getNodeLtsVersion
+  log "Current Node.JS LTS version $($nodeVersion)"
+  log "Downloading Node.JS installer..."
+  $nodeInstallerPath = downloadNode $nodeVersion $standalone
+  log "Node.JS installer downloaded"
+  if ($standalone) {
+    log "Extracting Node.JS..."
+    Expand-Archive -Path $nodeInstallerPath -DestinationPath "$($env:APPDATA)\win-node-inst\node" -Force 
+    $extractDir = (Get-ChildItem "$($env:APPDATA)\win-node-inst\node")[0].FullName
+    Start-Sleep 5
+    Rename-Item $extractDir "$($env:APPDATA)\win-node-inst\node\node" | Out-Null
+    log "Node.JS extracted. Verifying installation"
+  }
+  else {
+    log "Executing Node.JS installer; waiting until installation process finishes..."
+    Start-Process msiexec.exe -Wait -ArgumentList "/I $($nodeInstallerPath)"
+    log "Node.JS finished installing. Verifying installation"
+  }
+  $nodePath = getNodePath
+  if ($null -eq $nodePath) {
+    exitWithError 2 "ERROR: Unable to find Node.JS"
+  }
+  log "Node.JS installed successfully"
+  if (Test-Path $nodeInstallerPath) {
+    Remove-Item $nodeInstallerPath
+  }
+  return $nodePath
+}
+
+function getNode($standalone) {
+  log "Checking if Node.JS is installed"
+  $nodePath = getNodePath
+  if ($null -ne $nodePath) {
+    log "Node.JS is installed"
+  }
+  else {
+    $nodePath = (installNode $standalone)
+  }
+  log ""
+  return $nodePath
+
+}

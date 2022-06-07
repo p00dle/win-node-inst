@@ -39,3 +39,44 @@ function downloadGit($url, $standalone) {
   Invoke-WebRequest -Uri $url -OutFile $filePath
   return $filePath
 }
+
+function installGit($standalone) {
+  log "Git not installed"
+  log "Getting Git current version download URL..."
+  $gitDownloadUrl = getGitDownloadUrl $standalone
+  log "Downloading Git installer..."
+  $gitInstallerPath = downloadGit $gitDownloadUrl
+  log "Git installer downloaded"
+  if ($standalone) {
+    log "Extracting Git..."
+    & $gitInstallerPath -o "$($env:APPDATA)\win-node-inst\git" -y | Out-Null
+    log "Git extracted. Verifying installation"
+  }
+  else {
+    log "Executing Git installer; waiting until installation process finishes..."
+    Start-Process $gitInstallerPath -Wait 
+    log "Git finished installing. Verifying installation"
+  }
+  $gitPath = getGitPath
+  if ($null -eq $gitPath) {
+    exitWithError 2 "ERROR: Unable to find Git"
+  }
+  log "Git installed successfully"
+  if (Test-Path $gitInstallerPath) {
+    Remove-Item $gitInstallerPath
+  }
+  return $gitPath
+}
+
+function getGit ($standalone) {
+  log "Checking if Git for Windows is installed"
+  $gitPath = getGitPath
+  if ($null -ne $gitPath) {
+    log "Git installed"
+  }
+  else {
+    $gitPath = installGit $standalone
+  }
+  log ""
+  return $gitPath
+}
