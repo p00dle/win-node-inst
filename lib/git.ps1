@@ -20,13 +20,13 @@ function getGitPath() {
 function getGitDownloadUrl($standalone) {
   $arch = ("32", "64")[[Environment]::Is64BitOperatingSystem]
   if ($standalone) {
-    $html = Invoke-WebRequest -Uri "https://git-scm.com/download/win"
+    $html = Invoke-WebRequest -Uri "https://git-scm.com/download/win" -UseBasicParsing
     $regex = "https://github.com/git-for-windows/git/releases/download/v\d+\.\d+\.\d+\.windows\.1/PortableGit-\d+\.\d+\.\d+-$($arch)-bit.7z.exe"
     $match = Select-String -InputObject $html -Pattern $regex
     return $match.Matches[0].Value
   }
   else {
-    $html = Invoke-WebRequest -Uri "https://github.com/git-for-windows/git/releases/latest"
+    $html = Invoke-WebRequest -Uri "https://github.com/git-for-windows/git/releases/latest" -UseBasicParsing
     $regex = "/git-for-windows/git/releases/download/v\d+\.\d+\.\d+\.windows\.1/Git-\d\.\d+\.\d+-$($arch)-bit.exe"
     $match = Select-String -InputObject $html -Pattern $regex
     return "https://github.com$($match.Matches[0].Value)"
@@ -36,7 +36,7 @@ function getGitDownloadUrl($standalone) {
 function downloadGit($url, $standalone) {
   $gitInstaller = $url -replace "https://github.com/git-for-windows/git/releases/download/v\d+\.\d+\.\d+\.windows\.1/", ""
   $filePath = "$($env:TEMP)\$($gitInstaller)"
-  Invoke-WebRequest -Uri $url -OutFile $filePath
+  Invoke-WebRequest -Uri $url -OutFile $filePath -UseBasicParsing
   return $filePath
 }
 

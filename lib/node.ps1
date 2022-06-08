@@ -17,7 +17,7 @@ function downloadNode($version, $standalone) {
   }
   $nodeInstallerPath = "$($env:TEMP)\$($nodeInstaller)"
   $url = "https://nodejs.org/dist/$($version)/$($nodeInstaller)"
-  Invoke-WebRequest -Uri $url -OutFile $nodeInstallerPath
+  Invoke-WebRequest -Uri $url -OutFile $nodeInstallerPath -UseBasicParsing
   return $nodeInstallerPath
 }
 
