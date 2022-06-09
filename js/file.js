@@ -17,3 +17,11 @@ exports.writeFile = function writeFile(filePath, data) {
   fs.writeFileSync(filePath, data);
 }
 
+exports.createDirIfNotExists = function createDirIfNotExists(path) {
+  try {
+    fs.accessSync(path);
+  } catch {
+    return;
+  }
+  fs.mkdirSync(path);
+}

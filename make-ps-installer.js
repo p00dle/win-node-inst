@@ -1,7 +1,7 @@
 #!/usr/bin/node
 const path = require('path');
 const { exit } = require('./js/exit');
-const { writeFile } = require('./js/file');
+const { writeFile, createDirIfNotExists } = require('./js/file');
 const { parseDeploy } = require('./js/parse-deploy');
 const { parsePackageJson } = require('./js/parse-package');
 const { getPaths } = require('./js/get-paths');
@@ -23,6 +23,7 @@ $mainGitRepository = "${params.repo}"
 $useTsc = ${params.tsc ? '$true' : '$false'}
 `;
 const installerName = `${params.name}-installer.ps1`;
-writeFile(path.join(path.dirname(packageJsonPath), installerName), installerParams + bundlePs(path.join(__dirname, 'main.ps1')));
+createDirIfNotExists(path.join(path.dirname(packageJsonPath), 'win-install', installerName))
+writeFile(path.join(path.dirname(packageJsonPath), 'win-install', installerName), installerParams + bundlePs(path.join(__dirname, 'main.ps1')));
 exit();
 
