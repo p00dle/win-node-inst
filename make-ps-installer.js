@@ -1,4 +1,4 @@
-#!/usr/bin/node
+#!/usr/bin/env node
 const path = require('path');
 const { exit } = require('./js/exit');
 const { writeFile, createDirIfNotExists } = require('./js/file');

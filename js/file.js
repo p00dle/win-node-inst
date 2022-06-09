@@ -20,8 +20,7 @@ exports.writeFile = function writeFile(filePath, data) {
 exports.createDirIfNotExists = function createDirIfNotExists(path) {
   try {
     fs.accessSync(path);
-  } catch {
-    return;
-  }
-  fs.mkdirSync(path);
+    return
+  } catch { }
+  fs.mkdirSync(path, { recursive: true });
 }
