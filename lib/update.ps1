@@ -1,6 +1,4 @@
-function updateFromGithub($gitPath) {
-  Set-Location './app' | Out-Null
-  $appOldVersion = getAppVersion "./package.json"
+function updateFromGithub($gitPath, $appOldVersion) {
   log "Check if $($appName) is already installed"
   if ($null -eq $appOldVersion) {
     log "App not installed. installing now"
@@ -14,10 +12,10 @@ function updateFromGithub($gitPath) {
     & $gitPath remote add origin $mainGitRepository | Out-Null
   }
   else {
+    Set-Location './app' | Out-Null
     log "App version v$($appOldVersion) installed"
     log "Checking for updates..."
     log "[GIT LOGS START]"
-    
   } 
   
   & $gitPath pull origin master
@@ -26,7 +24,6 @@ function updateFromGithub($gitPath) {
   
   log ""
   Set-Location ".." | Out-Null
-  return $appOldVersion
 }
 
 function updateDependencies() {
@@ -34,7 +31,7 @@ function updateDependencies() {
   log "Updating dependencies... (This may take a while)"
   $npmPath = getNpmPath
   log "[NPM LOGS START]"
-  & $npmPath install --only=production | Out-Null
+  & $npmPath install --omit=dev | Out-Null
   log "[NPM LOGS END]"
   log "Dependencies up to date"  
   Set-Location ".." | Out-Null
@@ -47,13 +44,12 @@ function buildFromTypescript($useTsc) {
   Set-Location './app' | Out-Null
   log "Building from source..."
   $npxPath = getNpxPath
-  & $npxPath -- yes tsc
+  & $npxPath --yes tsc
   log "Build complete"
   Set-Location ".." | Out-Null
 }
 
 function refreshStartFile($appName, $appNewVersion, $nodePath, $appEntryPoint) {
   $startFileContent = "@echo $($appName) v$($appNewVersion)`n@`"$($nodePath)`" `"./app/$($appEntryPoint)`"`n@pause`n"
-  Set-Location '..'
   Out-File -FilePath "./start.bat" -InputObject $startFileContent -Encoding "ascii"  
 }

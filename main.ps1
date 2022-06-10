@@ -10,12 +10,13 @@ $global:ProgressPreference = "SilentlyContinue"
 makeStandaloneAppDataDir $standalone
 $nodePath = getNode $standalone
 $gitPath = getGit $standalone
-$appOldVersion = updateFromGithub $gitPath
+$appOldVersion = getAppVersion "./app/package.json"
+updateFromGithub $gitPath $appOldVersion
 $appNewVersion = getAppVersion "./app/package.json"
 if ($appNewVersion -ne $appOldVersion) {
   updateDependencies
   buildFromTypescript $useTsc
-  refreshStartFile $appName, $appNewVersion, $nodePath, $appEntryPoint
+  refreshStartFile $appName $appNewVersion $nodePath $appEntryPoint
 }
 
 log "App fully updated to v$($appNewVersion)"

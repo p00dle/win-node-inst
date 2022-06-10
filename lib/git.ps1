@@ -1,8 +1,4 @@
 function getGitPath() {
-  $gitPath = where.exe /Q "git.exe"
-  if ($null -ne $gitPath) {
-    return $gitPath
-  }
   $gitPath = "$($env:APPDATA)\win-node-inst\git\bin\git.exe"
   if (Test-Path $gitPath) {
     return $gitPath

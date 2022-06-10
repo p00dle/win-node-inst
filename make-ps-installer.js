@@ -23,7 +23,7 @@ $mainGitRepository = "${params.repo}"
 $useTsc = ${params.tsc ? '$true' : '$false'}
 `;
 const installerName = `${params.name}-installer.ps1`;
-createDirIfNotExists(path.join(path.dirname(packageJsonPath), 'win-install', installerName))
+createDirIfNotExists(path.join(path.dirname(packageJsonPath), 'win-install'))
 writeFile(path.join(path.dirname(packageJsonPath), 'win-install', installerName), installerParams + bundlePs(path.join(__dirname, 'main.ps1')));
 exit();
 

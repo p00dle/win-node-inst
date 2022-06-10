@@ -22,10 +22,6 @@ function downloadNode($version, $standalone) {
 }
 
 function getNodePath() {
-  $nodePath = where.exe /Q "node.exe"
-  if ($null -ne $nodePath) {
-    return $nodePath
-  }
   $nodePath = "$($env:APPDATA)\win-node-inst\node\node\node.exe"
   if (Test-Path $nodePath) {
     return $nodePath
@@ -42,10 +38,6 @@ function getNodePath() {
 }
 
 function getNpmPath() {
-  $npmPath = where.exe "npm.cmd"
-  if ($null -ne $npmPath) {
-    return $npmPath
-  }
   $npmPath = "$($env:APPDATA)\win-node-inst\node\node\npm.cmd"
   if (Test-Path $npmPath) {
     return $npmPath
@@ -62,10 +54,6 @@ function getNpmPath() {
 }
 
 function getNpxPath() {
-  $npmPath = where.exe "npm.cmd"
-  if ($null -ne $npmPath) {
-    return $npmPath
-  }
   $npmPath = "$($env:APPDATA)\win-node-inst\node\node\npx.cmd"
   if (Test-Path $npmPath) {
     return $npmPath
