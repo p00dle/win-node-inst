@@ -50,6 +50,6 @@ function buildFromTypescript($useTsc) {
 }
 
 function refreshStartFile($appName, $appNewVersion, $nodePath, $appEntryPoint) {
-  $startFileContent = "@echo $($appName) v$($appNewVersion)`n@`"$($nodePath)`" `"./app/$($appEntryPoint)`"`n@pause`n"
+  $startFileContent = "@cd %~dp0`n@echo $($appName) v$($appNewVersion)`n@`"$($nodePath)`" `"%~dp0/app/$($appEntryPoint)`"`n@pause`n"
   Out-File -FilePath "./start.bat" -InputObject $startFileContent -Encoding "ascii"  
 }
