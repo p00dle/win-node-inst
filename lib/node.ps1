@@ -22,10 +22,6 @@ function downloadNode($version, $standalone) {
 }
 
 function getNodePath() {
-  $nodePath = "$($env:APPDATA)\win-node-inst\node\node\node.exe"
-  if (Test-Path $nodePath) {
-    return $nodePath
-  }
   $nodePath = "C:\Program Files\nodejs\node.exe"
   if (Test-Path $nodePath) {
     return $nodePath
@@ -33,15 +29,15 @@ function getNodePath() {
   $nodePath = "C:\Program Files (x86)\nodejs\node.exe"
   if (Test-Path $nodePath) {
     return $nodePath
+  }  
+  $nodePath = "$($env:APPDATA)\win-node-inst\node\node\node.exe"
+  if (Test-Path $nodePath) {
+    return $nodePath
   }
   return $null
 }
 
 function getNpmPath() {
-  $npmPath = "$($env:APPDATA)\win-node-inst\node\node\npm.cmd"
-  if (Test-Path $npmPath) {
-    return $npmPath
-  }
   $npmPath = "C:\Program Files\nodejs\npm.cmd"
   if (Test-Path $npmPath) {
     return $npmPath
@@ -49,22 +45,28 @@ function getNpmPath() {
   $npmPath = "C:\Program Files (x86)\nodejs\npm.cmd"
   if (Test-Path $npmPath) {
     return $npmPath
+  }  
+  $npmPath = "$($env:APPDATA)\win-node-inst\node\node\npm.cmd"
+  if (Test-Path $npmPath) {
+    return $npmPath
   }
+
   return $null
 }
 
 function getNpxPath() {
-  $npmPath = "$($env:APPDATA)\win-node-inst\node\node\npx.cmd"
-  if (Test-Path $npmPath) {
-    return $npmPath
-  }
   $npmPath = "C:\Program Files\nodejs\npx.cmd"
   if (Test-Path $npmPath) {
     return $npmPath
   }
   $npmPath = "C:\Program Files (x86)\nodejs\npx.cmd"
   if (Test-Path $npmPath) {
-    return $npmPath
+    r  
+    $npmPath = "$($env:APPDATA)\win-node-inst\node\node\npx.cmd"
+    if (Test-Path $npmPath) {
+      return $npmPath
+    }
+    eturn $npmPath
   }
   return $null
 }
