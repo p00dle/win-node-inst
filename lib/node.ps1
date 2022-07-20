@@ -61,7 +61,6 @@ function getNpxPath() {
   }
   $npmPath = "C:\Program Files (x86)\nodejs\npx.cmd"
   if (Test-Path $npmPath) {
-    r  
     $npmPath = "$($env:APPDATA)\win-node-inst\node\node\npx.cmd"
     if (Test-Path $npmPath) {
       return $npmPath
