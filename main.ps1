@@ -10,6 +10,7 @@ $global:ProgressPreference = "SilentlyContinue"
 makeStandaloneAppDataDir $standalone
 $nodePath = getNode $standalone
 $gitPath = getGit $standalone
+$env:PATH += ";$(Split-Path -Path $gitPath);$(Split_path -Path $nodePath)"
 $appOldVersion = getAppVersion "./app/package.json"
 updateFromGithub $gitPath $appOldVersion
 $appNewVersion = getAppVersion "./app/package.json"

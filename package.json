@@ -1,6 +1,6 @@
 {
   "name": "win-node-inst",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "description": "Make a PowerShell installer to deploy a Node.JS app",
   "main": "./make-ps-installer.js",
   "scripts": {

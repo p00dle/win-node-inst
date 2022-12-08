@@ -55,18 +55,19 @@ function getNpmPath() {
 }
 
 function getNpxPath() {
-  $npmPath = "C:\Program Files\nodejs\npx.cmd"
-  if (Test-Path $npmPath) {
-    return $npmPath
+  $npxPath = "C:\Program Files\nodejs\npx.cmd"
+  if (Test-Path $npxPath) {
+    return $npxPath
   }
-  $npmPath = "C:\Program Files (x86)\nodejs\npx.cmd"
-  if (Test-Path $npmPath) {
-    $npmPath = "$($env:APPDATA)\win-node-inst\node\node\npx.cmd"
-    if (Test-Path $npmPath) {
-      return $npmPath
-    }
-    eturn $npmPath
+  $npxPath = "C:\Program Files (x86)\nodejs\npx.cmd"
+  if (Test-Path $npxPath) {
+    return $npxPath
+  }  
+  $npxPath = "$($env:APPDATA)\win-node-inst\node\node\npx.cmd"
+  if (Test-Path $npxPath) {
+    return $npxPath
   }
+
   return $null
 }
 
