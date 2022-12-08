@@ -1,8 +1,8 @@
-const fs = require('fs');
+const fs = require("fs");
 
 exports.readFile = function readFile(filePath) {
-  return fs.readFileSync(filePath, { encoding: 'utf8' });
-}
+  return fs.readFileSync(filePath, { encoding: "utf8" });
+};
 
 exports.exists = function exists(filePath) {
   try {
@@ -11,16 +11,16 @@ exports.exists = function exists(filePath) {
   } catch {
     return false;
   }
-}
+};
 
 exports.writeFile = function writeFile(filePath, data) {
   fs.writeFileSync(filePath, data);
-}
+};
 
 exports.createDirIfNotExists = function createDirIfNotExists(path) {
   try {
     fs.accessSync(path);
-    return
-  } catch { }
+    return;
+  } catch {}
   fs.mkdirSync(path, { recursive: true });
-}
+};

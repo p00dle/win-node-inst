@@ -3,7 +3,7 @@ exports.exit = function exit(error) {
     console.error(error);
     process.exit(1);
   } else {
-    console.info('Done');
+    console.info("Done");
     process.exit(0);
   }
-}
+};
